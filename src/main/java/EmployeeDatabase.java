@@ -15,7 +15,7 @@ public class EmployeeDatabase {
     /**
      * List of employees.
      */
-    public List<Employee> employees;
+    private List<Employee> employees;
 
     /**
      * Constructor which initializes the employees list.
@@ -30,10 +30,10 @@ public class EmployeeDatabase {
     /**
      * Returns the manager for the given employee.
      *
-     * @param employee
-     * @return
+     * @param employee the employee who needs to find his/her manager.
+     * @return the manager of the employee
      */
-    Employee findManager(final Employee employee) {
+    public Employee findManager(final Employee employee) {
         Employee manager = null;
         for (int i = 0; i < employees.size(); i++) {
             if (employees.get(i).getName() == employee.getManager()) {
@@ -42,6 +42,23 @@ public class EmployeeDatabase {
             }
         }
         return manager;
+    }
+
+    /**
+     * Returns subordinate for the given employee.
+     *
+     * @param employee the employee who wants to find his/her subordinate
+     * @return subordinate the subordinate of the employee
+     */
+    public List<Employee> findSubordinate(final Employee employee) {
+        //Employee subordinate = null;
+        List<Employee> subordinate = new ArrayList<Employee>();
+        for (int i = 0; i < employees.size(); i++) {
+            if (employees.get(i).getManager() == employee.getName()) {
+                subordinate.add(employees.get(i));
+            }
+        }
+        return subordinate;
     }
 
     /**
@@ -56,6 +73,11 @@ public class EmployeeDatabase {
         /*
          * Implement this function
          */
+        if (findManager(employee) == null) {
+            return 0;
+        } else {
+            return 1 + countManagersAbove(findManager(employee));
+        }
     }
 
     /**
@@ -70,6 +92,11 @@ public class EmployeeDatabase {
         /*
          * Implement this function
          */
+        int count = 0;
+        for (Employee person : findSubordinate(employee)) {
+                count += 1 + countEmployeesUnder(person);
+        }
+        return count;
     }
 
     /**
